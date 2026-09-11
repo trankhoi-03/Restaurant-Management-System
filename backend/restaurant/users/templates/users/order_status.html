@@ -1,0 +1,35 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+<div class="text-center mt-5">
+    <h1>Thank you, {{ order.customer_name }}!</h1>
+    
+    <div class="alert alert-info mt-4">
+        <h4>Status: {{ order.get_status_display }}</h4>
+
+        {# 1. Check final states FIRST #}
+        {% if order.status == 'paid' %}
+            <h3 class="text-success">Thank you for choosing us! 🍽️</h3>
+            <p>See you again!</p>
+
+        {# 2. Then check if it's ready #}
+        {% elif order.status == 'ready' %}
+            <h3 class="text-success">Your order is ready! 🥣</h3>
+            <p>Please collect it from the counter.</p>
+
+        {# 3. Then check if it's cooking AND has a time #}
+        {# We add "and order.status == 'cooking'" to be extra safe #}
+        {% elif order.estimated_time and order.status == 'cooking' %}
+            <h2 class="display-4 text-danger">{{ order.estimated_time }} Minutes</h2>
+            <p>until your meal is ready.</p>
+
+        {# 4. Otherwise, it must be pending #}
+        {% else %}
+            <h3 class="text-secondary">Waiting for Cook to confirm time...</h3>
+            <p>Please refresh this page in a moment.</p>
+        {% endif %} 
+    </div>
+    
+    <p>You ordered: <strong>{{ order.meal.name }}</strong></p>
+</div>
+{% endblock %}

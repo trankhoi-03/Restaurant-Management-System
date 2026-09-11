@@ -1,0 +1,44 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <h2>🍽️ Welcome to Halo Restaurant</h2>
+                <p>Please place your order below</p>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Your Name</label>
+                        {{ form.customer_name }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Select Your Table</label>
+                        {{ form.table }}
+                        <div class="form-text">Only available tables are shown</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Choose your Meal</label>
+                        {{ form.meal }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Special Requests / Description</label>
+                        {{ form.special_requests }}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">Order Now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

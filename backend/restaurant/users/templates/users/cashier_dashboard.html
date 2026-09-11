@@ -1,0 +1,47 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+<h2 class="mb-4">💸 Cashier Dashboard</h2>
+
+{% if orders %}
+<div class="table-responsive">
+    <table class="table table-hover shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Meal</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.customer_name }}</td>
+                <td>{{ order.meal.name }}</td>
+                <td class="fw-bold text-success">${{ order.meal.price }}</td>
+                <td><span class="badge bg-success">Ready to Serve</span></td>
+                <td>
+                    <form action="{% url 'confirm_payment' order.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            💰 Confirm Payment
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+    <div class="alert alert-secondary text-center py-5">
+        <h4>No orders waiting for payment. 🍵</h4>
+    </div>
+{% endif %}
+
+<meta http-equiv="refresh" content="30">
+{% endblock %}

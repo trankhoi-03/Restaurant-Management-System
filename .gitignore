@@ -1,0 +1,15 @@
+# Môi trường ảo
+venv/
+env/
+.venv/
+
+# Database & Cache
+*.sqlite3
+db.sqlite3
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Biến môi trường
+.env
+.env.*

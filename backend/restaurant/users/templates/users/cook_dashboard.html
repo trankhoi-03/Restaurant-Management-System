@@ -1,0 +1,59 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+<h2 class="mb-4">👨‍🍳 Kitchen Dashboard</h2>
+
+{% if orders %}
+<div class="row">
+    {% for order in orders %}
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-{% if order.status == 'pending' %}danger{% else %}warning{% endif %}">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>Order #{{ order.id }}</strong>
+                <span class="badge bg-{% if order.status == 'pending' %}danger{% else %}warning{% endif %}">
+                    {{ order.get_status_display }}
+                </span>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">{{ order.meal.name }}</h4>
+                <p class="card-text text-muted">Customer: {{ order.customer_name }}</p>
+                
+                {% if order.special_requests %}
+                <div class="alert alert-info py-1">
+                    <small><strong>Note:</strong> {{ order.special_requests }}</small>
+                </div>
+                {% endif %}
+
+                <hr>
+
+                <form action="{% url 'update_order' order.id %}" method="POST">
+                    {% csrf_token %}
+                    
+                    {% if order.status == 'pending' %}
+                        <div class="input-group mb-3">
+                            <input type="number" name="estimated_time" class="form-control" placeholder="Mins" required min="1">
+                            <input type="hidden" name="status" value="cooking">
+                            <button class="btn btn-warning" type="submit">Start Cooking</button>
+                        </div>
+                    {% elif order.status == 'cooking' %}
+                        <p><strong>Est. Time:</strong> {{ order.estimated_time }} mins</p>
+                        <input type="hidden" name="status" value="ready">
+                        <button class="btn btn-success w-100" type="submit">✅ Mark as Ready</button>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="card-footer text-muted text-end">
+                <small>{{ order.created_at|timesince }} ago</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+    <div class="alert alert-success text-center py-5">
+        <h4>No active orders. Time to clean the kitchen! 🧹</h4>
+    </div>
+{% endif %}
+
+<meta http-equiv="refresh" content="30">
+{% endblock %}
